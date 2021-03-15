@@ -52,16 +52,18 @@ export class ProductService {
 
   // All products with category id mapped to category name
   // Be sure to specify the type to ensure after the map that it knows the correct type
+  // combineLatest will combine multiple streams into a new stream
+  // using the lastest emitted values, emits an array of values, one for each stream
   productsWithCategory$ = combineLatest(
     this.products$,
     this.productCategoryService.productCategories$
   ).pipe(
-    map(([products, categories]) =>
+    map(([products, categories]) => // array destructuring
       products.map(
         p =>
           ({
-            ...p,
-            category: categories.find(c => p.categoryId === c.id).name
+            ...p, // copy of products
+            category: categories.find(c => p.categoryId === c.id).name // add category property
           } as Product) // <-- note the type here!
       )
     ),
